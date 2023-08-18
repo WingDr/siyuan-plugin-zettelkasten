@@ -1,26 +1,23 @@
 {
-  "name": "plugin-sample-vite-svelte",
-  "author": "frostime",
+  "name": "siyuan-plugin-zettelkasten",
+  "author": "WingDr",
   "url": "https://github.com/siyuan-note/plugin-sample-vite-svelte",
-  "version": "0.1.12",
-  "minAppVersion": "2.9.0",
+  "version": "0.0.1",
+  "minAppVersion": "2.10.0",
   "backends": ["all"],
   "frontends": ["all"],
   "displayName": {
-    "en_US": "Plugin sample with vite and svelte",
-    "zh_CN": "插件样例 vite + svelte 版"
+    "en_US": "Zettelkasten for SiYuan",
+    "zh_CN": "卡片式笔记"
   },
   "description": {
-    "en_US": "SiYuan plugin sample with vite and svelte",
-    "zh_CN": "使用 vite 和 svelte 开发的思源插件样例"
+    "en_US": "Simple zettelkasten plugin for SiYuan",
+    "zh_CN": "思源笔记的简单卡片式笔记插件"
   },
   "readme": {
     "en_US": "README.md",
     "zh_CN": "README_zh_CN.md"
   },
   "funding": {
-    "custom": [
-      "https://afdian.net/a/frostime"
-    ]
   }
 }
