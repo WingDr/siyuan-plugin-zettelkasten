@@ -2,6 +2,10 @@
     border: 1px rgb(189, 119, 119) dashed;
 }
 
+.protyle-container > .protyle > .protyle-content {
+    padding-top: 0px;
+}
+
 .plugin-sample {
     &__custom-tab {
         background-color: var(--b3-theme-background);
