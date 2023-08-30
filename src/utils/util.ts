@@ -1,10 +1,6 @@
-import SiYuanPluginCitation from "../index";
 import { 
   dataDir,
-  isDev,
-  STORAGE_NAME
 } from "./constants";
-import { createLogger } from "./simple-logger";
 import { type INoticer } from "./noticer";
 const fs = window.require("fs");
 const path = window.require("path");
@@ -79,4 +75,12 @@ function fsStat(path: string) {
       resolve(stat);
     });
   });
+}
+
+export async function sleep(time:number) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(time);
+    }, time);
+  })
 }

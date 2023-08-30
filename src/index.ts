@@ -17,6 +17,7 @@ import {
 import { INoticer, createNoticer } from "./utils/noticer";
 import { ILogger, createLogger } from "./utils/simple-logger";
 import { DisplayManager } from "./display/displayManager";
+import { SettingTab } from "./display/settingTab/settingTab";
 
 export default class PluginZettelkasten extends Plugin {
 
@@ -24,11 +25,13 @@ export default class PluginZettelkasten extends Plugin {
     public logger: ILogger;
     public displayManager: DisplayManager;
     public isMobile: boolean;
+
+    public settingTab: SettingTab;
     
     private blockIconEventBindThis = this.blockIconEvent.bind(this);
 
     async onload() {
-        this.data[STORAGE_NAME] = { readonlyText: "Readonly" };
+        this.data[STORAGE_NAME] = { notebook: "" };
 
         this.noticer = createNoticer();
         this.logger = createLogger("main");
@@ -62,6 +65,7 @@ export default class PluginZettelkasten extends Plugin {
         });
 
         this.displayManager = new DisplayManager(this);
+        this.settingTab = new SettingTab(this);
     }
 
     onLayoutReady() {
@@ -71,27 +75,11 @@ export default class PluginZettelkasten extends Plugin {
 
     onunload() {
         console.log(this.i18n.byePlugin);
-        showMessage("Goodbye SiYuan Plugin");
         console.log("onunload");
     }
 
-    /**
-     * A custom setting pannel provided by svelte
-     */
-    openDIYSetting(): void {
-        let dialog = new Dialog({
-            title: "SettingPannel",
-            content: `<div id="SettingPanel"></div>`,
-            width: "600px",
-            destroyCallback: (options) => {
-                console.log("destroyCallback", options);
-                //You'd better destroy the component when the dialog is closed
-                pannel.$destroy();
-            }
-        });
-        let pannel = new SettingPannel({
-            target: dialog.element.querySelector("#SettingPanel"),
-        });
+    openSetting(): void {
+        this.settingTab.openSetting();
     }
 
     private eventBusLog({ detail }: any) {
@@ -342,7 +330,6 @@ export default class PluginZettelkasten extends Plugin {
             icon: "iconSettings",
             label: "A custom setting dialog (by svelte)",
             click: () => {
-                this.openDIYSetting();
             }
         });
         menu.addItem({

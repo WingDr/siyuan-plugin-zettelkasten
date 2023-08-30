@@ -30,7 +30,7 @@ export const REF_DIR_PATH = "./references/";
 // 用户指南不应该作为可以写入的笔记本
 export const hiddenNotebook: Set<string> = new Set(["思源笔记用户指南", "SiYuan User Guide"]);
 export const STORAGE_NAME = "menu-config";
-export const defaultReferencePath = "/References";
+export const defaultCardStoragePath = "/References";
 export const defaultTitleTemplate = "{{citekey}}";
 export const defaultNoteTemplate = `
 ---

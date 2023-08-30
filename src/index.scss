@@ -28,3 +28,26 @@
         padding: 2px 8px;
     }
 }
+
+.grid-item.muuri-item-dragging {
+    z-index: 4 !important;
+  }
+  .grid-item.muuri-item-releasing {
+    z-index: 3 !important;
+  }
+
+  .grid-item:not(.grid-item:has( .protyle .protyle-hint.fn__none)) {
+    z-index: 2 !important;
+  }
+
+  .grid-item:not(.grid-item:has( .protyle .protyle-toolbar.fn__none)) {
+    z-index: 2 !important;
+  }
+
+  .grid-item:not(.grid-item:has( .protyle .protyle-util.fn__none)) {
+    z-index: 2 !important;
+  }
+
+  .grid-item.muuri-item-hidden {
+    z-index: 0 !important;
+  }
