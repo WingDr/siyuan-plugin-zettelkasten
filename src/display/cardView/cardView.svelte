@@ -7,12 +7,8 @@
   import PluginZettelkasten from "@/index";
   import { ILogger, createLogger } from "@/utils/simple-logger";
   import { Protyle } from "siyuan";
-  import Muuri, { Packer } from "muuri";
   import Packery from "packery"
   import Draggabilly from "draggabilly"
-  import {GridStack} from "gridstack"
-  // import "gridstack/dist/gridstack.min.css"
-  import { sleep } from "@/utils/util";
 
   export let app;
   export let plugin: PluginZettelkasten;
@@ -28,39 +24,10 @@
 
   onMount(async () => {
     logger = createLogger("card view");
-    // plugin.eventBus.on("ws-main", refreshLayout.bind(grid))
     await getAllBlocks();
     await produceProtyle();
+    buildGrid();
     
-    // grid = new Muuri('.card-grid', {
-    //   items: '.grid-item',
-    //   dragEnabled: true,
-    //   dragHandle: '.grid-item-title',
-    //   dragStartPredicate: {
-    //     distance: 10
-    //   }
-    // });
-
-    grid = new Packery('.card-grid', {
-      itemSelector: '.grid-item',
-      gutter: 5,
-      resize: true
-    })
-
-    grid.getItemElements().forEach( function( itemElem ) {
-      var draggie = new Draggabilly( itemElem, {
-        handle: ".grid-item-title"
-      } );
-      grid.bindDraggabillyEvents( draggie );
-    });
-
-    // grid = GridStack.init({
-    //   alwaysShowResizeHandle: false,
-    //   disableResize: true,
-    //   fitToContent: true,
-    //   column: "auto",
-    //   cellHeight: "auto"
-    // }, '.card-grid')
   });
 
   onDestroy(async () => {
@@ -118,22 +85,34 @@
     })
   }
 
-  let handleObserve:MutationCallback = (ms, ob) => {
-    const gridBlockItem = (ob as any).gridBlockItem as HTMLDivElement;
+  let buildGrid = () => {
+    grid = new Packery('.card-grid', {
+      itemSelector: '.grid-item',
+      gutter: 20,
+      columnwidth: ".grid-item",
+      resize: true,
+      transitionDuration: 0
+    })
+    grid.getItemElements().forEach( function( itemElem ) {
+      var draggie = new Draggabilly( itemElem, {
+        handle: ".grid-item-title"
+      } );
+      grid.bindDraggabillyEvents( draggie );
+    });
+    grid.on("dragItemPositioned", grid.layout);
+  }
+
+  let refreshItemWidth = () => {
+
+  }
+
+  let handleObserve:MutationCallback = () => {
     // refreshBlockTools(gridBlockItem);
     refreshLayout();
   }
 
-  let refreshBlockTools = (gridBlockItem: HTMLDivElement) => {
-    const position = gridBlockItem.getBoundingClientRect();
-    const hint = gridBlockItem.querySelector(".protyle .protyle-hint") as HTMLDivElement;
-    hint.style["transform"] = `translateX(-${position.x}px) translateY(-${position.y}px)`
-  }
-
   let refreshLayout = () => {
-    // grid.refreshItems()
-    // grid.init()
-    grid.layout()
+    grid.shiftLayout()
   }
 </script>
 
@@ -160,12 +139,11 @@
     z-index: 1;
     background-color: var(--b3-theme-primary);
     border: solid 0.2em black;
+    border-radius: 5px;
   }
 
   .protyle-container {
-    border: solid 2px grey;
     border-radius: 4px;
-    margin: 5px;
   }
 </style>
 

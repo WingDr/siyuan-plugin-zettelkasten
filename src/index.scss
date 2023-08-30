@@ -46,3 +46,11 @@
     background-color: var(--b3-theme-secondary) !important;
     z-index: 3 !important; /* keep dragged item on top */
   }
+
+  .packery-drop-placeholder{
+    outline: 3px dashed #444;
+    outline-offset: -6px;
+    /* transition position changing */
+    -webkit-transition: -webkit-transform 0.2s;
+            transition: transform 0.2s;
+  }
