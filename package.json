@@ -32,6 +32,9 @@
   },
   "dependencies": {
     "template_js": "^2.4.0",
-    "muuri": "^0.9.5"
+    "muuri": "^0.9.5",
+    "packery": "^2.1.2",
+    "gridstack": "^9.0.2",
+    "draggabilly": "^3.0.0"
   }
 }

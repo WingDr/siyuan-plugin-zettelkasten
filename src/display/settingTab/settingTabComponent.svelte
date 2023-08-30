@@ -223,7 +223,7 @@
     const path = window.require("path");
     const file = JSON.parse(
       await fs.readFileSync(
-        path.join(dataDir, "./plugins/siyuan-plugin-citation/plugin.json")
+        path.join(dataDir, "./plugins/siyuan-plugin-zettelkasten/plugin.json")
       )
     );
     pluginVersion = file.version;
