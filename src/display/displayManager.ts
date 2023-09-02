@@ -1,10 +1,12 @@
-import { Dialog, IModel, openTab } from "siyuan";
+import { Dialog, IModel, openTab, openWindow } from "siyuan";
 import PluginZettelkasten from "@/index";
 import { ILogger, createLogger } from "@/utils/simple-logger";
 
 import newCardDialog from "@/display/newCardDialog/newCardDialog.svelte"
 import CardView from "@/display/cardView/cardView.svelte"
-import { isDev } from "@/utils/constants";
+import { isDev, STORAGE_NAME } from "@/utils/constants";
+import { createDocWithMd, getBlockByID, renameDoc } from "@/api";
+import { sleep } from "@/utils/util";
 
 
 export class DisplayManager {
@@ -35,6 +37,22 @@ export class DisplayManager {
     });
     create.$on("close", () => {
       dialog.destroy()
+    })
+  }
+
+  public async openNewCardWindow() {
+    const notebook = this.plugin.data[STORAGE_NAME].cardStorageNotebook;
+    const cardsDir = this.plugin.data[STORAGE_NAME].cardStoragePath;
+    const blockID = await createDocWithMd(notebook, `${cardsDir}/temp`, "")
+    while (!await getBlockByID(blockID)){
+      await sleep(200);
+    }
+    const block = await getBlockByID(blockID);
+    await renameDoc(block.box, block.path, blockID);
+    openWindow({
+      doc: {
+        id: blockID
+      }
     })
   }
 

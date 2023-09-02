@@ -64,6 +64,15 @@ export default class PluginZettelkasten extends Plugin {
             }
         });
 
+        this.addCommand({
+            langKey: "openNewCard",
+            langText: "打开新窗口以新建卡片",
+            hotkey: "",
+            globalCallback: () => {
+                this.displayManager.openNewCardWindow();
+            }
+        })
+
         this.displayManager = new DisplayManager(this);
         this.settingTab = new SettingTab(this);
     }
@@ -117,6 +126,14 @@ export default class PluginZettelkasten extends Plugin {
                 click: () => {
                     this.displayManager.openCardViewTab();
                     if (isDev) this.logger.info("Open card view tab");
+                }
+            });
+            menu.addItem({
+                icon: "iconInfo",
+                label: "新建卡片（新窗口）",
+                click: async () => {
+                    if (isDev) this.logger.info("Open new card dialog");
+                    this.displayManager.openNewCardWindow();
                 }
             });
         }

@@ -29,28 +29,28 @@
     }
 }
 
-  .grid-item:not(.grid-item:has( .protyle .protyle-hint.fn__none)) {
-    z-index: 2 !important;
-  }
+  // .grid-item:not(.grid-item:has( .protyle .protyle-hint.fn__none)) {
+  //   z-index: 2 !important;
+  // }
 
-  .grid-item:not(.grid-item:has( .protyle .protyle-toolbar.fn__none)) {
-    z-index: 2 !important;
-  }
+  // .grid-item:not(.grid-item:has( .protyle .protyle-toolbar.fn__none)) {
+  //   z-index: 2 !important;
+  // }
 
-  .grid-item:not(.grid-item:has( .protyle .protyle-util.fn__none)) {
-    z-index: 2 !important;
-  }
+  // .grid-item:not(.grid-item:has( .protyle .protyle-util.fn__none)) {
+  //   z-index: 2 !important;
+  // }
 
-  .grid-item.is-dragging,
-  .grid-item.is-positioning-post-drag {
-    background-color: var(--b3-theme-secondary) !important;
-    z-index: 3 !important; /* keep dragged item on top */
-  }
+  // .grid-item.is-dragging,
+  // .grid-item.is-positioning-post-drag {
+  //   background-color: var(--b3-theme-secondary) !important;
+  //   z-index: 3 !important; /* keep dragged item on top */
+  // }
 
-  .packery-drop-placeholder{
-    outline: 3px dashed #444;
-    outline-offset: -6px;
-    /* transition position changing */
-    -webkit-transition: -webkit-transform 0.2s;
-            transition: transform 0.2s;
-  }
+  // .packery-drop-placeholder{
+  //   outline: 3px dashed #444;
+  //   outline-offset: -6px;
+  //   /* transition position changing */
+  //   -webkit-transition: -webkit-transform 0.2s;
+  //           transition: transform 0.2s;
+  // }

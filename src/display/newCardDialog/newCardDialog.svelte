@@ -2,15 +2,16 @@
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
     import { 
         // sql as query, 
-        lsNotebooks, 
         createDocWithMd, removeDoc,
         getBlockByID,
         renameDoc
     } from "@/api";
     import { Protyle } from "siyuan";
-    import { hiddenNotebook } from "@/utils/constants";
+    import { STORAGE_NAME } from "@/utils/constants";
+    import PluginZettelkasten from "@/index";
 
     export let app;
+    export let plugin: PluginZettelkasten;
 
     let dispather = createEventDispatcher();
 
@@ -41,14 +42,9 @@
     });
 
     async function initProtyle() {
-        const notebooksRequest = await lsNotebooks();
-        let notebooks = notebooksRequest.notebooks;
-        // 没有必要把所有笔记本都列出来
-        notebooks = notebooks.filter(
-            (notebook) => !notebook.closed && !hiddenNotebook.has(notebook.name)
-        );
-        notebook = notebooks[0].id;
-        blockID = await createDocWithMd(notebook, `/Assets/Cards/temp`, "")
+        const notebook = plugin.data[STORAGE_NAME].cardStorageNotebook;
+        const cardsDir = plugin.data[STORAGE_NAME].cardStoragePath;
+        blockID = await createDocWithMd(notebook, `${cardsDir}/temp`, "")
         return new Protyle(app, divProtyle, {
             blockId: blockID,
             render: {
@@ -66,7 +62,6 @@
 
     let confirm = async () => {
         const block = await getBlockByID(blockID);
-        console.log(block.box, block.path)
         await renameDoc(block.box, block.path, blockID);
         save = true;
         dispather("close");

@@ -16,6 +16,7 @@
     "@sveltejs/vite-plugin-svelte": "^2.0.3",
     "@tsconfig/svelte": "^4.0.1",
     "@types/node": "^20.2.0",
+    "@types/dragula": "^3.7.1",
     "eslint": "^8.42.0",
     "fast-glob": "^3.2.12",
     "glob": "^7.2.3",
@@ -32,7 +33,6 @@
   },
   "dependencies": {
     "template_js": "^2.4.0",
-    "packery": "^2.1.2",
-    "draggabilly": "^3.0.0"
+    "dragula": "^3.7.3"
   }
 }
