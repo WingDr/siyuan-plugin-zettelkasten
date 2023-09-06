@@ -7,7 +7,7 @@ import CardView from "@/display/cardView/cardView.svelte";
 import CardDock from "@/display/cardDock/cardDock.svelte";
 import NewCardWindow from "@/display/newCardWindow/newCardWindow.svelte";
 import { isDev, STORAGE_NAME } from "@/utils/constants";
-import { createDocWithMd, getBlockByID, renameDoc } from "@/api";
+import { createDocWithMd, getBlockByID, renameDoc, removeDoc } from "@/api";
 import { sleep } from "@/utils/util";
 
 
@@ -47,7 +47,7 @@ export class DisplayManager {
               }
           });
       },
-      destroy() {
+      async destroy() {
           _this.newCardWindowComponent?.$destroy();
       }
     });
@@ -77,7 +77,7 @@ export class DisplayManager {
   public async openNewCardWindow() {
     const tabOption = {
       icon: "iconCardBox",
-      title: "卡片视图",
+      title: "新建卡片",
       data: {},
       id: this.plugin.name + this.NEW_CARD_WINDOW_TYPE
     };

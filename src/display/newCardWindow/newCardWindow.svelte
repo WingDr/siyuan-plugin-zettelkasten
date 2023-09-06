@@ -3,11 +3,15 @@
   import { 
       // sql as query, 
       createDocWithMd, removeDoc,
-      getBlockByID
+      getBlockByID,
+
+      renameDoc
+
   } from "@/api";
   import { Protyle } from "siyuan";
   import { STORAGE_NAME } from "@/utils/constants";
   import PluginZettelkasten from "@/index";
+  import { sleep } from "@/utils/util";
 
   export let app;
   export let plugin: PluginZettelkasten;
@@ -20,6 +24,7 @@
 
   onMount(async () => {
       protyle = await initProtyle();
+      if (!protyle) return;
       // 聚焦contenteditable，参考https://blog.csdn.net/weixin_38099055/article/details/108483748
       const focusNode = document.querySelector('.protyle div[contenteditable]');
       const range = document.createRange();
@@ -31,8 +36,7 @@
   });
 
   onDestroy(async () => {
-    console.log(blockID)
-      if (!save) {
+      if (!save && blockID) {
           const block = await getBlockByID(blockID);
           await removeDoc(block.box, block.path);
       }
@@ -44,6 +48,14 @@
       const notebook = plugin.data[STORAGE_NAME].cardStorageNotebook;
       const cardsDir = plugin.data[STORAGE_NAME].cardStoragePath;
       blockID = await createDocWithMd(notebook, `${cardsDir}/temp`, "")
+      // 没打开新窗口的时候不会挂载，直接返回就好了
+      if (!divProtyle) return;
+      let block = await getBlockByID(blockID);
+      while (!block) {
+        block = await getBlockByID(blockID);
+        await sleep(200);
+      }
+      await renameDoc(block.box, block.path, blockID)
       return new Protyle(app, divProtyle, {
           blockId: blockID,
           render: {
@@ -53,6 +65,7 @@
               scroll: true
           }
       });
+      
   }
 </script>
 
