@@ -29,28 +29,62 @@
     }
 }
 
-  // .grid-item:not(.grid-item:has( .protyle .protyle-hint.fn__none)) {
-  //   z-index: 2 !important;
-  // }
+.layout__center .layout-tab-container .layout-container {
+  .left-panel .organize-grid-container {
+    .grid-item {
+      position: relative;
+      border: dashed 1px white;
+      border-bottom: dashed 1px gray;
+      overflow: hidden;
 
-  // .grid-item:not(.grid-item:has( .protyle .protyle-toolbar.fn__none)) {
-  //   z-index: 2 !important;
-  // }
+      .grid-item-title {
+        display: none;
+      }
 
-  // .grid-item:not(.grid-item:has( .protyle .protyle-util.fn__none)) {
-  //   z-index: 2 !important;
-  // }
+      &__move-handler {
+        position: absolute;
+        left: 5px;
+        z-index: 1;
+        cursor: move;
+      }
+    }
+  }
+  .right-panel .card-grid {
+    .grid-item {
+      position: relative;
+      margin: 10px auto;
+      border: solid 0.2em white;
+      border-radius: 10px;
+      box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 2px 4px;
+    
+      .grid-item-title {
+        position: absolute;
+        left: 5px;
+        z-index: 1;
+      }
 
-  // .grid-item.is-dragging,
-  // .grid-item.is-positioning-post-drag {
-  //   background-color: var(--b3-theme-secondary) !important;
-  //   z-index: 3 !important; /* keep dragged item on top */
-  // }
+      &__move-handler {
+        display: none;
+      }
+    
+      .protyle-container {
+        border-radius: 10px;
+        overflow: hidden;
+      }
+    }
+  }
 
-  // .packery-drop-placeholder{
-  //   outline: 3px dashed #444;
-  //   outline-offset: -6px;
-  //   /* transition position changing */
-  //   -webkit-transition: -webkit-transform 0.2s;
-  //           transition: transform 0.2s;
-  // }
+  .grid-item:not(.grid-item:has(.protyle .protyle-hint[class*="fn__none"])) {
+    z-index: 2;
+  }
+}
+
+.grid-item.gu-mirror {
+  .grid-item-title {
+    display: none;
+  }
+  
+  .grid-item__move-handler {
+    display: none;
+  }
+}

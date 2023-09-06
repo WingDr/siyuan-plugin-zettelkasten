@@ -1,9 +1,11 @@
-import { Dialog, IModel, openTab, openWindow } from "siyuan";
+import { Dialog, ITabModel, openTab, openWindow } from "siyuan";
 import PluginZettelkasten from "@/index";
 import { ILogger, createLogger } from "@/utils/simple-logger";
 
-import newCardDialog from "@/display/newCardDialog/newCardDialog.svelte"
-import CardView from "@/display/cardView/cardView.svelte"
+import newCardDialog from "@/display/newCardDialog/newCardDialog.svelte";
+import CardView from "@/display/cardView/cardView.svelte";
+import CardDock from "@/display/cardDock/cardDock.svelte";
+import NewCardWindow from "@/display/newCardWindow/newCardWindow.svelte";
 import { isDev, STORAGE_NAME } from "@/utils/constants";
 import { createDocWithMd, getBlockByID, renameDoc } from "@/api";
 import { sleep } from "@/utils/util";
@@ -13,11 +15,42 @@ export class DisplayManager {
 
   private logger: ILogger;
   private TAB_TYPE = "card_view_tab";
+  private NEW_CARD_WINDOW_TYPE = "new_card_window";
+  private DOCK_TYPE = "card_dock";
   private cardViewTabComponent: CardView;
   private cardView;
+  private cardDockComponent: CardDock;
+  private newCardWindowComponent: NewCardWindow;
+  private newCardWindow: () => ITabModel;
 
   constructor(private plugin: PluginZettelkasten) {
     this.logger = createLogger("display manager");
+    this.addCardDock();
+    const _this = this;
+    this.cardView = this.plugin.addTab({
+      type: this.TAB_TYPE,
+      init() {
+          _this.mountCardView(this.element);
+      },
+      destroy() {
+          _this.cardViewTabComponent?.$destroy();
+      }
+    }); 
+    this.newCardWindow = this.plugin.addTab({
+      type: this.NEW_CARD_WINDOW_TYPE,
+      init() {
+          _this.newCardWindowComponent = new NewCardWindow({
+              target: this.element,
+              props: {
+                  app: _this.plugin.app,
+                  plugin: _this.plugin
+              }
+          });
+      },
+      destroy() {
+          _this.newCardWindowComponent?.$destroy();
+      }
+    });
   }
 
   public openNewCardDialog() {
@@ -33,6 +66,7 @@ export class DisplayManager {
       target: dialog.element.querySelector("#newCardDialog"),
       props: {
           app: this.plugin.app,
+          plugin: this.plugin
       }
     });
     create.$on("close", () => {
@@ -41,34 +75,58 @@ export class DisplayManager {
   }
 
   public async openNewCardWindow() {
-    const notebook = this.plugin.data[STORAGE_NAME].cardStorageNotebook;
-    const cardsDir = this.plugin.data[STORAGE_NAME].cardStoragePath;
-    const blockID = await createDocWithMd(notebook, `${cardsDir}/temp`, "")
-    while (!await getBlockByID(blockID)){
-      await sleep(200);
-    }
-    const block = await getBlockByID(blockID);
-    await renameDoc(block.box, block.path, blockID);
+    const tabOption = {
+      icon: "iconCardBox",
+      title: "卡片视图",
+      data: {},
+      id: this.plugin.name + this.NEW_CARD_WINDOW_TYPE
+    };
+    const tab = openTab({
+      app: this.plugin.app,
+      custom: tabOption,
+      removeCurrentTab: false
+    })
+    if (isDev) this.logger.info("Open tab, results=>", {tabOption, tab})
+    const screenWidth = window.screen.availWidth;
+    const screenHeight = window.screen.availHeight;
     openWindow({
-      doc: {
-        id: blockID
-      }
+      height: screenHeight * 0.3,
+      width: screenWidth * 0.3,
+      tab,
+      doc: {id: null}
+    })
+  }
+
+  public addCardDock() {
+    const _this = this;
+    this.plugin.addDock({
+      config: {
+        position: "RightTop",
+        size: {width: 300, height: 0},
+        icon: "iconSaving",
+        title: "卡片笔记"
+      },
+      data: {
+        app: this.plugin.app,
+        plugin: this.plugin
+      },
+      type: this.DOCK_TYPE,
+      init() {
+          _this.cardDockComponent = new CardDock({
+            target: this.element,
+            props: {
+              app: this.data.app,
+              plugin: this.data.plugin
+            }
+          });
+      },
+      destroy() {
+          _this.cardDockComponent?.$destroy();
+      },
     })
   }
 
   public openCardViewTab() {
-    const _this = this;
-    if (!this.cardView) {
-      this.cardView = this.plugin.addTab({
-        type: this.TAB_TYPE,
-        init() {
-            _this.mountCardView(this.element);
-        },
-        destroy() {
-            _this.cardViewTabComponent?.$destroy();
-        }
-      }); 
-    }
     const tabOption = {
       icon: "iconCardBox",
       title: "卡片视图",
@@ -80,6 +138,7 @@ export class DisplayManager {
     const tab = openTab({
       app: this.plugin.app,
       custom: tabOption,
+      removeCurrentTab: false
     });
     if (isDev) this.logger.info("Open tab, results=>", {tabOption, tab})
   }

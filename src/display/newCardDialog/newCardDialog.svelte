@@ -18,7 +18,6 @@
     let divProtyle: HTMLDivElement;
     let protyle: Protyle;
     let blockID: string = '';
-    let notebook: string;
     let save = false;
 
     onMount(async () => {
@@ -36,7 +35,7 @@
     onDestroy(async () => {
         if (!save) {
             const block = await getBlockByID(blockID);
-            await removeDoc(notebook, block.path);
+            await removeDoc(block.box, block.path);
         }
         protyle.destroy();
     });

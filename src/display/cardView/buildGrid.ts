@@ -1,11 +1,16 @@
 import dragula from "dragula";
 
+const moveHandler = ["grid-item-title", "grid-item__move-handler"];
+
 export class EasyGrid {
   private container: HTMLElement;
   private items: NodeListOf<HTMLElement>;
   private column: number;
   private columnWidth: number;
   private columns: HTMLElement[];
+
+  private docIndexStart = 0;
+  private docIndexEnd = 0;
 
   public drake: dragula.Drake;
   
@@ -16,7 +21,14 @@ export class EasyGrid {
     itemSelector: string,
     columnClass: string,
     maxWidth: number,
-    minWidth: number
+    minWidth: number,
+    dropCallback: (
+      el:HTMLElement, 
+      target:HTMLElement, 
+      source:HTMLElement, 
+      sibling:HTMLElement
+      ) => any,
+    cloneCallback?: (clone: HTMLElement, original: HTMLElement, type: "mirror" | "copy") => any
   }) {
     this.container = document.querySelector(config.containerSelector) as HTMLElement;
     this.items = this.container.querySelectorAll(config.itemSelector);
@@ -33,6 +45,21 @@ export class EasyGrid {
   public refreshItems() {
     this.container = document.querySelector(this.config.containerSelector) as HTMLElement;
     this.items = this.container.querySelectorAll(this.config.itemSelector);
+  }
+
+  public refreshItemIndex() {
+    const organizeColumn = document.querySelector(this.config.orgainizerSelector);
+    const storageColumn = document.querySelector(this.config.storagerSelector);
+    let index = 0
+    for (let node of organizeColumn.children) {
+      node.setAttribute("data-block-index", index.toString());
+      index += 1;
+    }
+    index = 0
+    for (let node of storageColumn.children) {
+      node.setAttribute("data-block-index", index.toString());
+      index += 1;
+    }
   }
 
   public layout() {
@@ -82,14 +109,31 @@ export class EasyGrid {
   }
 
   private async enableDrag(columns: HTMLElement[]) {
-    const docColumn = document.querySelector(this.config.orgainizerSelector);
+    const _this = this;
+    const organizeColumn = document.querySelector(this.config.orgainizerSelector);
     const storageColumn = document.querySelector(this.config.storagerSelector);
-    this.drake = dragula([docColumn, storageColumn, ...columns], {
-      moves: (el, container, handle) => {
-        return handle.classList.contains("grid-item-title");
+    this.drake = dragula([organizeColumn, storageColumn, ...columns], {
+      moves: (_el, _container, handle) => {
+        for (let handlerClass of moveHandler) {
+          if (handle.classList.contains(handlerClass)) return true;
+        }
+        return false;
       },
-      accepts: () => {return true},
+      accepts: (_el, target:HTMLElement, source: HTMLElement, _sibling) => {
+        if (source == organizeColumn) {
+          if (target == organizeColumn) {
+            return true;
+          }
+          else return false;
+        } else if ([organizeColumn, storageColumn].indexOf(target) != -1) return true
+        return false;
+      },
+      copy(_el, source:HTMLElement) {
+          return [..._this.columns, storageColumn].indexOf(source) != -1;
+      },
       revertOnSpill: true
     })
+    this.drake.on("drop", this.config.dropCallback);
+    this.drake.on("cloned", this.config.cloneCallback);
   }
 }

@@ -1,31 +1,40 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
-  import { 
+  import {
+  getBlockByID,
       sql
   } from "@/api";
   import { STORAGE_NAME, isDev } from "@/utils/constants";
   import PluginZettelkasten from "@/index";
   import { ILogger, createLogger } from "@/utils/simple-logger";
-  import { Protyle } from "siyuan";
   import "dragula/dist/dragula.css"
   import { sleep } from "@/utils/util";
   import { EasyGrid } from "@/display/cardView/buildGrid"
+
+  import Card from "./card.svelte"
 
   export let app;
   export let plugin: PluginZettelkasten;
 
   let logger: ILogger;
-  let blocks: Block[] = [];
+  let searchBlocks: Block[] = [];
+  let orgainizeBlocks: Block[] = [];
+  let storageBlocks: Block[] = [];
   let showOrganize: boolean = true;
   let showKeeper: boolean = false;
 
-  let protyles: Protyle[] = [];
+  let isClone = false;
+
+  let containerSelector = ".card-grid";
+  let orgainizerSelector = ".organize-card-grid";
+  let storagerSelector = ".storage-grid-container";
+
   let grid: EasyGrid;
 
   onMount(async () => {
     logger = createLogger("card view");
     await getAllBlocks();
-    await produceProtyle();
+    // await produceProtyle();
     buildGrid();
     await totalRefreshLayout();
   });
@@ -37,74 +46,74 @@
   let getAllBlocks = async () => {
     const notebook = plugin.data[STORAGE_NAME].cardStorageNotebook;
     const cardsDir = plugin.data[STORAGE_NAME].cardStoragePath;
-    blocks = [];
+    searchBlocks = [];
     let offset = 0;
     let limit = 64;
     let searchedBlocks = await sql(`select * from blocks where box like '${notebook}' and hpath like '${cardsDir}/%' and type like 'd' limit ${offset}, ${limit}`);
     while (searchedBlocks.length == limit) {
-      blocks = [...blocks, ...searchedBlocks];
+      searchBlocks = [...searchBlocks, ...searchedBlocks];
       offset += limit;
       searchedBlocks = await sql(`select * from blocks where box like '${notebook}' and hpath like '${cardsDir}/%' and type like 'd' limit ${offset}, ${limit}`)
     }
-    blocks = [...blocks, ...searchedBlocks];
+    searchBlocks = [...searchBlocks, ...searchedBlocks];
     return;
-  }
-
-  let produceProtyle = async () => {
-    if (isDev) logger.info("查询到已有的块, blocks=>", blocks);
-    const cardGrid = document.querySelector(".card-grid");
-    blocks.forEach(block => {
-      // const div = document.createElement("div");
-      // cardGrid.insertAdjacentElement("beforeend", div);
-      const target = cardGrid.querySelector(`.protyle-container[data-node-id="${block.id}"]`).children[0] as HTMLDivElement;
-      protyles.push(new Protyle(app, target, {
-        blockId: block.id,
-        render: {
-          background: false,
-          breadcrumb: false,
-          breadcrumbDocName: false,
-          scroll: false
-        }
-      }))
-
-    })
   }
 
   let buildGrid = () => {
     grid = new EasyGrid({
-      containerSelector: ".card-grid",
-      orgainizerSelector: ".organize-card-grid",
-      storagerSelector: ".storage-grid-container",
+      containerSelector,
+      orgainizerSelector,
+      storagerSelector,
       itemSelector: ".grid-item",
       columnClass: "grid-column",
       minWidth: 300,
-      maxWidth: 500
+      maxWidth: 500,
+      dropCallback: synchronizeBlock,
+      cloneCallback: async (_clone: HTMLElement, _original: HTMLElement, type: "mirror" | "copy") => {
+        if (type == "copy") isClone = true;
+      }
     })
     window.addEventListener("resize", totalRefreshLayout.bind(grid));
+  }
+
+  let synchronizeBlock = async (el:HTMLElement, _target:HTMLElement, _source:HTMLElement, _sibling:HTMLElement) => {
+    if (isClone) {
+      const id  = el.getAttribute("data-node-id");
+      const block = await getBlockByID(id);
+      new Card({
+        target: el.parentElement,
+        anchor: el,
+        props: {
+          app,
+          block,
+          index: el.parentElement.children.length
+        }
+      })
+      el.remove();
+    }
+    isClone = false;
+    grid.refreshItemIndex();
   }
 
   let totalRefreshLayout = async () => {
     await sleep(200);
     if (isDev) logger.info("完全刷新排布")
     grid.refreshItems();
+    grid.refreshItemIndex();
     grid.layout()
-  }
-
-  let getTimeFromID = (id: string) => {
-    const year = id.slice(0, 4);
-    const month = id.slice(4, 6);
-    const day = id.slice(6, 8);
-    const hour = id.slice(8, 10);
-    const minute = id.slice(10, 12);
-    const second = id.slice(12, 14);
-    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
   }
 </script>
 
 <style lang="scss">
+  .tab-toolbar {
+    height: 30px;
+    background-color: var(--b3-theme-background);
+    border-bottom: solid 1px gray;
+  }
+
   .layout-container {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 32px);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -113,7 +122,7 @@
   .left-panel {
     width: 50%;
     height: 100%;
-    z-index: 0;
+    background-color: var(--b3-theme-background);
 
     .organize-grid-container {
       height: 100%;
@@ -122,18 +131,6 @@
 
       .organize-card-grid {
         height: 100%;
-
-        .grid-item {
-          position: relative;
-          z-index: 1;
-          border: solid 0.1em gray;
-          overflow: hidden;
-
-          .grid-item-title {
-            left: 5px;
-            z-index: 4;
-          }
-        }
       }
     }
   }
@@ -174,29 +171,9 @@
         width: 100%;
         height: 100%;
         margin: 5px;
-        z-index: 0;
         display: flex;
         flex-direction: row;
         justify-content: space-around;
-
-        .grid-item {
-          position: relative;
-          margin: 10px auto;
-          z-index: 1;
-          border: solid 0.2em gray;
-          border-radius: 10px;
-
-          .grid-item-title {
-            position: absolute;
-            left: 5px;
-            z-index: 4;
-          }
-
-          .protyle-container {
-            border-radius: 10px;
-            overflow: hidden;
-          }
-        }
       }
     }
   }
@@ -204,32 +181,40 @@
   
 </style>
 
+<div class="tab-toolbar">
+  <div></div>
+</div>
 <div class="layout-container">
   <div class="left-panel" class:fn__none={!showOrganize}>
     <div class="left-panel-toolbar"></div>
     <div class="organize-grid-container">
-      <div class="organize-card-grid"></div>
+      <div class="organize-card-grid">
+        {#each orgainizeBlocks as block, index (block)}
+          <Card {app} {block} {index}></Card>
+        {/each}
+      </div>
     </div>
   </div>
+  <div class="layout__resize--lr layout__resize" style="z-index: unset;" class:fn__none={!showOrganize}></div>
   <div class="right-panel">
     <div class="upper-show-place" class:fn__none={!showKeeper}>
       <div class="storage-grid-container">
-        <div class="storage-card-grid"></div>
+        <div class="storage-card-grid">
+          {#each storageBlocks as block, index (block.id)}
+            <Card {app} {block} {index}></Card>
+          {/each}
+        </div>
       </div>
     </div>
+    <div class="layout__resize" class:fn__none={!showKeeper}></div>
     <div class="lower-show-place">
       <div class="lower-show-place__toolbar">
         <button class="lower-show-place__toolbar-refresh b3-button b3-button--outline" on:click={totalRefreshLayout}>刷新</button>
       </div>
       <div class="grid-container">
         <div class="card-grid" id="card-grid">
-          {#each blocks as block, index}
-          <div class="grid-item" data-node-id={block.id}>
-            <div class="grid-item-title">{getTimeFromID(block.id)}</div>
-            <div class="protyle-container" data-node-id={block.id} data-block-index={index}>
-              <div style="overflow-y: hidden;"></div>
-            </div>
-          </div>
+          {#each searchBlocks as block, index (block)}
+            <Card {app} {block} {index}></Card>
           {/each}
         </div>
       </div>
