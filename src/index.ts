@@ -9,8 +9,6 @@ import {
 } from "siyuan";
 import "@/index.scss";
 
-import SettingPannel from "@/libs/setting-panel.svelte";
-
 import {
     STORAGE_NAME, isDev, usedIcons
 } from "@/utils/constants"
@@ -25,6 +23,7 @@ export default class PluginZettelkasten extends Plugin {
     public logger: ILogger;
     public displayManager: DisplayManager;
     public isMobile: boolean;
+    public isWindow: boolean;
 
     public settingTab: SettingTab;
     
@@ -36,10 +35,9 @@ export default class PluginZettelkasten extends Plugin {
         this.noticer = createNoticer();
         this.logger = createLogger("main");
 
-        console.log("loading plugin-sample", this.i18n);
-
         const frontEnd = getFrontend();
         this.isMobile = frontEnd === "mobile" || frontEnd === "browser-mobile";
+        this.isWindow = frontEnd === "desktop-window";
         // 图标的制作参见帮助文档
         this.addIcons(usedIcons);
 

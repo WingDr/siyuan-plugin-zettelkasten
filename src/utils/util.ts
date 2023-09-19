@@ -1,3 +1,4 @@
+import { getBlockByID, getChildBlocks } from "@/api";
 import { 
   dataDir,
 } from "./constants";
@@ -83,4 +84,18 @@ export async function sleep(time:number) {
       resolve(time);
     }, time);
   })
+}
+
+export async function checkEmptyDoc(docID: string): Promise<boolean> {
+  const childs = await getChildBlocks(docID);
+  // 本身就没有
+  if (!childs || !childs.length) return true;
+  // 只有一个空的第一行
+  if (childs.length == 1) {
+    const content = await getBlockByID(childs[0].id);
+    if (!content || !content.markdown || !content.markdown.length) {
+      return true;
+    }
+  }
+  return false;
 }

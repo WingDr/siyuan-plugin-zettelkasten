@@ -14,6 +14,7 @@
         blockId: block.id,
         render: {
           background: false,
+          gutter: false,
           breadcrumb: false,
           breadcrumbDocName: false,
           scroll: false
@@ -42,21 +43,15 @@
 <style lang="scss">
   .grid-item {
     position: relative;
-    border: solid 0.1em gray;
-    overflow: hidden;
-
-    .grid-item__move-handler {
-        opacity: 0;
-    }
-
-    .grid-item__move-handler:hover {
-        opacity: 1;
-    }
+    margin: 10px auto;
+    border: solid 0.2em white;
+    border-radius: 10px;
+    box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 2px 4px;
 
     .grid-item-title {
-      left: 10px;
+      position: absolute;
+      left: 5px;
       z-index: 1;
-      cursor: move;
     }
 
     .grid-item-menu {
@@ -81,9 +76,6 @@
 </style>
 
 <div class="grid-item" data-node-id={block.id}>
-  <div class="grid-item__move-handler">
-    move
-  </div>
   <div class="grid-item-title">{getTimeFromID(block.id)}</div>
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div class="grid-item-menu" on:mouseenter={openMenu} on:mouseleave={closeMenu}>
