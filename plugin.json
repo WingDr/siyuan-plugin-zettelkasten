@@ -3,16 +3,16 @@
   "author": "WingDr",
   "url": "https://github.com/siyuan-note/plugin-sample-vite-svelte",
   "version": "0.0.1",
-  "minAppVersion": "2.10.0",
+  "minAppVersion": "2.10.6",
   "backends": ["all"],
   "frontends": ["all"],
   "displayName": {
     "en_US": "Zettelkasten for SiYuan",
-    "zh_CN": "卡片式笔记"
+    "zh_CN": "卡片式写作"
   },
   "description": {
     "en_US": "Simple zettelkasten plugin for SiYuan",
-    "zh_CN": "思源笔记的简单卡片式笔记插件"
+    "zh_CN": "思源笔记的简单卡片式写作插件"
   },
   "readme": {
     "en_US": "README.md",

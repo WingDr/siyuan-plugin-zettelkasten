@@ -9,8 +9,10 @@
     "removedData": "数据已删除",
     "confirmRemove": "确认删除 ${name} 中的数据？",
     "insertEmoji": "插入表情",
-    "name": "思源",
-    "openNewCard": "在新窗口新新建卡片",
+    "name": "卡片式写作",
+    "openNewCardDialog": "新建卡片",
+    "openNewCardWindow": "在新窗口新建卡片",
+    "setting": "设置",
     "hello": {
         "makesure": "使用这个模板之前，请阅读<a href=\"https://github.com/siyuan-note/plugin-sample\">官方教程</a>, 确保自己已经理解了插件的基本开发流程。"
     },
@@ -26,13 +28,13 @@
     "refreshLiteratureNotesContents": "刷新所有文献内容",
     "settingTab": {
         "settingTabTitle": "插件版本：${version}",
-        "settingTabDescription": "如果有好的想法或者发现了bug，欢迎到github上提<a href=\"${issuesURL}\"><b>issue</b></a>或者发邮件到我的<a href=\"mailto:${e-mail}\"><b>邮箱</b></a>",
+        "settingTabDescription": "如果有好的想法或者发现了bug，欢迎到github上提<a href=\"${issuesURL}\"><b>issue</b></a>",
         "basic": {
         "title": "基础设置",
         "notebookSelectorTitle": "笔记本",
-        "notebookSelectorDescription": "选择文献库放置的笔记本",
-        "referencePathInputTitle": "文献库路径",
-        "referencePathInputDescription": "放置存放文献内容的文献库文档路径，以'/'开头和分隔子目录，例如'/Assets/References'",
+        "notebookSelectorDescription": "选择放置卡片的笔记本",
+        "cardStoragePathInputTitle": "卡片路径",
+        "cardStoragePathInputDescription": "放置所有卡片的总路径，以'/'开头和分隔子目录，例如'/Assets/Cards'",
         "databaseSelectorTitle": "数据库类型",
         "databaseSelectorDescription": "选择使用的数据库类型",
         "UseItemKeySwitchTitle": "使用itemKey作为索引",

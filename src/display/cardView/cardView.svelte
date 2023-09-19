@@ -3,7 +3,7 @@
   import {
   getBlockByID,
       sql
-  } from "@/api";
+  } from "@/utils/api";
   import { STORAGE_NAME, isDev } from "@/utils/constants";
   import PluginZettelkasten from "@/index";
   import { ILogger, createLogger } from "@/utils/simple-logger";

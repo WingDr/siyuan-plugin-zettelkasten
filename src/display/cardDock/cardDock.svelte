@@ -2,7 +2,7 @@
   import PluginZettelkasten from "@/index";
   import Card from "./card.svelte"
   import { onMount } from "svelte";
-  import { sql } from "@/api";
+  import { sql } from "@/utils/api";
   import { STORAGE_NAME } from "@/utils/constants";
 
 

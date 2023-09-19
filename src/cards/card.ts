@@ -1,6 +1,6 @@
 import { STORAGE_NAME } from "@/utils/constants";
 import PluginZettelkasten from "..";
-import { createDocWithMd, getBlockByID, removeDoc, renameDoc } from "@/api";
+import { createDocWithMd, getBlockByID, removeDoc, renameDoc } from "@/utils/api";
 import { checkEmptyDoc, sleep } from "@/utils/util";
 
 export class Card {

@@ -1,4 +1,4 @@
-import { getBlockByID, getChildBlocks } from "@/api";
+import { getBlockByID, getChildBlocks } from "@/utils/api";
 import { 
   dataDir,
 } from "./constants";
