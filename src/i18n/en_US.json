@@ -9,8 +9,18 @@
     "removedData": "Data deleted",
     "confirmRemove": "Confirm to delete the data in ${name}?",
     "insertEmoji": "Insert Emoji",
-    "name": "SiYuan",
-    "hello": {
-        "makesure": "Before using this template, please read the <a href=\"https://github.com/siyuan-note/plugin-sample\">offical sample</a>, make sure that you've known about the pipeline for plugin developing."
+    "name": "Zettelkasten",
+    "openNewCardDialog": "Create a card",
+    "openNewCardWindow": "Create a card on new window",
+    "settingTab": {
+        "settingTabTitle": "Plugin Version: ${version}",
+        "settingTabDescription": "If you have any good ideas or find bugs, please feel free to submit an <a href=\"${issuesURL}\"><b>issue</b></a> on GitHub",
+        "basic": {
+            "title": "Basic Settings",
+            "notebookSelectorTitle": "Notebook",
+            "notebookSelectorDescription": "Select the notebook where the cards are placed.",
+            "cardStoragePathInputTitle": "Cards Storage Path",
+            "cardStoragePathInputDescription": "Set the path for storing cards, starting with '/' and separating subdirectories, for example, '/Assets/Cards'."
+        }
     }
 }

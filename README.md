@@ -2,8 +2,12 @@
 
 # Zettelkasten
 
+Currently, I have launched a preliminary version that focuses on functions similar to quickAdd. The core features are still under development.
+
+**Before using, you need to set up the notebook and path where the cards will be stored in advance.**
+
 * [ ] Top Bar Buttons:
-  * [ ] Quickly Create a New Card (with Shortcut)
+  * [x] Quickly Create a New Card (with Shortcut)
   * [ ] Open Card View
 * [ ] Card View:
   * [ ] Utilizes [Layout: muuri](https://github.com/haltu/muuri) for Arrangement
@@ -14,6 +18,6 @@
     * [ ] Editor supports inserting existing files for inclusion in the generation
     * [ ] Supports selecting cards to remove after merging (references to these cards will be transferred to the generated document)
 * [ ] Commands:
-  * [ ] Quickly Create a New Card (global command, opens a window)
+  * [x] Quickly Create a New Card (global command, opens a window)
   * [ ] Quickly Open Card View
 * [ ] Supports inserting references into the diary for the day after generating cards

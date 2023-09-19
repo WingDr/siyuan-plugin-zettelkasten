@@ -22,7 +22,7 @@ export class DisplayManager {
 
   constructor(private plugin: PluginZettelkasten) {
     this.logger = createLogger("display manager");
-    this.addCardDock();
+    // this.addCardDock();
     const _this = this;
     // 卡片视图tab
     this.plugin.addTab({
