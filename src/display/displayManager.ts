@@ -51,7 +51,7 @@ export class DisplayManager {
         });
         await card.rename();
         _this.plugin.onunload = async () => {
-          await card.closeEdit();
+          await card.closeEdit(this.element);
         }
       },
       async beforeDestroy() {

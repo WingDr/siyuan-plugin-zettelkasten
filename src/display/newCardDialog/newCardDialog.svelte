@@ -28,7 +28,7 @@
     });
 
     onDestroy(async () => {
-        card.closeEdit();
+        card.closeEdit(protyle.protyle.element);
         protyle.destroy();
     });
 

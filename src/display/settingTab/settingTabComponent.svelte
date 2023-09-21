@@ -26,7 +26,7 @@
   import Item from "./item/Item.svelte";
   import Input from "./item/Input.svelte";
   import type { IPanel, ITab } from "./tab";
-  import { lsNotebooks } from "@/utils/api";
+  import { getFile, lsNotebooks, readDir } from "@/utils/api";
 
   export let plugin: SiYuanPluginCitation;
   export let logger: ILogger;
@@ -218,16 +218,9 @@
     else return false;
   }
 
-  onMount(async () => {
-    const fs = window.require("fs");
-    const path = window.require("path");
-    const file = JSON.parse(
-      await fs.readFileSync(
-        path.join(dataDir, "./plugins/siyuan-plugin-zettelkasten/plugin.json")
-      )
-    );
+  onMount(async () => {    
+    const file = await getFile("/data/plugins/siyuan-plugin-zettelkasten/plugin.json");
     pluginVersion = file.version;
-
     await initializeData();
   });
 
