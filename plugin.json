@@ -2,7 +2,7 @@
   "name": "siyuan-plugin-zettelkasten",
   "author": "WingDr",
   "url": "https://github.com/WingDr/siyuan-plugin-zettelkasten",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "minAppVersion": "2.10.6",
   "backends": ["all"],
   "frontends": ["all"],
