@@ -3,6 +3,7 @@
     import { Protyle } from "siyuan";
     import PluginZettelkasten from "@/index";
   import {Card} from "@/cards/card";
+  import { sleep } from "@/utils/util";
 
     export let app;
     export let plugin: PluginZettelkasten;
@@ -17,11 +18,18 @@
     onMount(async () => {
         protyle = await initProtyle();
         // 聚焦contenteditable，参考https://blog.csdn.net/weixin_38099055/article/details/108483748
-        const focusNode = document.querySelector('div.b3-dialog--open .protyle div[contenteditable]');
+        let focusNode = document.querySelector('div.b3-dialog--open .protyle div[data-node-id] div[contenteditable]');
+        while (!focusNode) { 
+            // 等待protyle渲染出第一段，不然光标聚焦位置会错
+            await sleep(200); 
+            focusNode = document.querySelector('div.b3-dialog--open .protyle div[data-node-id] div[contenteditable]'); 
+        }
+        console.log(focusNode)
         const range = document.createRange();
         range.selectNodeContents(focusNode);
         range.collapse(false);
         const sel = window.getSelection();
+        console.log(range)
         sel.removeAllRanges();
         sel.addRange(range);
         await card.rename();

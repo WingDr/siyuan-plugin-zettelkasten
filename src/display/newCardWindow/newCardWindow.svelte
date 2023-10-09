@@ -2,6 +2,7 @@
   import { onDestroy, onMount } from "svelte";
   import { Protyle } from "siyuan";
   import PluginZettelkasten from "@/index";
+  import { sleep } from "@/utils/util";
 
   export let plugin: PluginZettelkasten;
   export let blockID: string;
@@ -13,7 +14,12 @@
       protyle = await initProtyle();
       if (!protyle) return;
       // 聚焦contenteditable，参考https://blog.csdn.net/weixin_38099055/article/details/108483748
-      const focusNode = document.querySelector('.protyle div[contenteditable]');
+      let focusNode = document.querySelector('.protyle div[data-node-id] div[contenteditable]');
+      while (!focusNode) { 
+            // 等待protyle渲染出第一段，不然光标聚焦位置会错
+            await sleep(200);
+            focusNode = document.querySelector('.protyle div[data-node-id] div[contenteditable]'); 
+        }
       const range = document.createRange();
       range.selectNodeContents(focusNode);
       range.collapse(false);
