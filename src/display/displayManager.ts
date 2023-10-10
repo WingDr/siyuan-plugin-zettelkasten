@@ -101,7 +101,7 @@ export class DisplayManager {
     openWindow({
       height: screenHeight * 0.3,
       width: screenWidth * 0.3,
-      tab
+      tab: await tab
     })
   }
 
